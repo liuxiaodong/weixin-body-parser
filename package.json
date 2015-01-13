@@ -16,6 +16,10 @@
   ],
   "author": "liuxiaodong",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuxiaodong/weixin-body-parser/issues"
+  },
+  "homepage": "https://github.com/liuxiaodong/weixin-body-parser",
   "dependencies": {
     "wechat-crypto": "0.0.2",
     "xml2js": "^0.4.4"
