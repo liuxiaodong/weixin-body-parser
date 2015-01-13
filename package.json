@@ -1,0 +1,23 @@
+{
+  "name": "weixin-body-parser",
+  "version": "0.0.1",
+  "description": "解析微信的的消息内容",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "weixin",
+    "wechat",
+    "wx",
+    "wexin-body-parser",
+    "parser",
+    "bodyParser"
+  ],
+  "author": "liuxiaodong",
+  "license": "MIT",
+  "dependencies": {
+    "wechat-crypto": "0.0.2",
+    "xml2js": "^0.4.4"
+  }
+}
