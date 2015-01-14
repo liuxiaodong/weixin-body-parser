@@ -13,8 +13,6 @@
 	
 	app.use(wxBodyParser({token:'token', encrypt_key:'encrypt_key',app_id:'app_id'}));
 ```
-* If you use other bodyParser middleware, please use it after wxBodyParser.
-
 
 ####Example
 
