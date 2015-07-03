@@ -1,6 +1,6 @@
 {
   "name": "weixin-body-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "解析微信的 xml 消息内容",
   "main": "index.js",
   "scripts": {

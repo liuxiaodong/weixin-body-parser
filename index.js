@@ -314,7 +314,6 @@ function xml(options) {
     async: true,
     explicitArray: true,
     normalize: true,
-    normalizeTags: true,
     trim: true
   };
   var parserOptions = extend(defaultOptions, options);
@@ -344,6 +343,8 @@ function xml(options) {
           return next(err);
         }
 
+        if(!xml) return next();
+
         req.rawBody = buf;
 
         var data = Object.keys(xml.xml).reduce(function(memo, k){
@@ -359,7 +360,7 @@ function xml(options) {
               err.status = 400;
               return next(err);
             }
-
+            if(!ret) return next();
             var result = Object.keys(ret.xml).reduce(function(memo, k){
               memo[_s.underscored(k)] = ret.xml[k][0];
               return memo;
