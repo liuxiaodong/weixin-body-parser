@@ -335,9 +335,9 @@ function xml(options) {
     }
   };
 
-  var attrNameProcessors = defaultFormatStr[options.attrNameProcessors || 'keep'];
+  var attrNameProcessors = defaultFormatStr[options.attrNameProcessors || 'underscored'];
   if(!attrNameProcessors) {
-    attrNameProcessors = defaultFormatStr.keep;
+    attrNameProcessors = defaultFormatStr.underscored;
   }
 
   /**
