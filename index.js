@@ -5,7 +5,6 @@ var http = require('http');
 var qs = require('qs');
 var path = require('path');
 var parseString = require('xml2js').parseString;
-var _s = require('underscore.string');
 var WXBizMsgCrypt = require('wechat-crypto');
 var regexp = /^(text\/xml|application\/([\w!#\$%&\*`\-\.\^~]+\+)?xml)$/i;
 
@@ -113,7 +112,7 @@ function multipart(options){
     Object.keys(options).forEach(function(key){
       form[key] = options[key];
     });
-    form['uploadDir'] === '/dev'
+    form['uploadDir'] === '/dev';
     // override formidable's default onPart
     // save upload file into redis with expire
     form.onPart = function(part){
@@ -121,7 +120,7 @@ function multipart(options){
       function genKey(){
         // 得到原始图片后缀名
         return "null";
-      };
+      }
 
       // let formidable handle all non-file parts
       if(!part.filename) return form.handlePart(part);
@@ -136,13 +135,13 @@ function multipart(options){
         createTime : undefined
       };
 
-		  form.emit('fileBegin',"file",file);
+    form.emit('fileBegin',"file",file);
       var _buff = "";
       part.on('data',function(buffer){
         form.pause();
         file.size += buffer.length;
         _buff += buffer.toString('binary');
-		    form.resume();
+        form.resume();
       });
 
       part.on('end',function(){
@@ -155,7 +154,7 @@ function multipart(options){
 
     function ondata(name, val){
       data.push({name:name, value:val});
-    };
+    }
 
     form.on('field', ondata);
     form.on('file', ondata);
@@ -179,7 +178,7 @@ function multipart(options){
 
     form.parse(req);
     
-  }
+  };
 }
 
 
@@ -316,6 +315,56 @@ function xml(options) {
     normalize: true,
     trim: true
   };
+
+
+  /**
+    * 字符串格式化
+    * keep: 保持不变
+    * lowerCase: 转为消息
+    * underscored: 转为下划线形式
+    */
+  var defaultFormatStr = {
+    keep: function(str){
+      return str.trim();
+    },
+    lowerCase: function(str){
+      return str.trim().toLowerCase();
+    },
+    underscored: function(str){
+      return str.trim().replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
+    }
+  };
+
+  var attrNameProcessors = defaultFormatStr[options.attrNameProcessors || 'keep'];
+  if(!attrNameProcessors) {
+    attrNameProcessors = defaultFormatStr.keep;
+  }
+
+  /**
+    * 对微信事件消息数据的 KEY 的转换
+    */
+
+  var _toString = Object.prototype.toString;
+  var _format = function(data){   
+    if(data){
+      for(var p in data){
+        var value = data[p];
+        var prot = p;
+        if(typeof prot == 'string') prot = attrNameProcessors(prot);
+        if(prot !== p){
+          data[prot] = value;
+          delete data[p];
+        }
+        if(_toString.call(value) == '[object Array]' || _toString.call(value) == '[object Object]') {
+          if(_toString.call(value) == '[object Array]' && value.length === 1){
+            data[prot] = value[0];
+          }
+          _format(data[prot]);
+        }
+      }
+    }
+  };
+
   var parserOptions = extend(defaultOptions, options);
   var crypter;
   if(parserOptions.token && parserOptions.encrypt_key && parserOptions.app_id){
@@ -347,10 +396,8 @@ function xml(options) {
 
         req.rawBody = buf;
 
-        var data = Object.keys(xml.xml).reduce(function(memo, k){
-          memo[_s.underscored(k)] = xml.xml[k][0];
-          return memo;
-        }, {});
+        var data = xml.xml;
+        _format(data);
 
         if(crypter && data.encrypt){
           var message = crypter.decrypt(data.encrypt).message;
@@ -361,10 +408,9 @@ function xml(options) {
               return next(err);
             }
             if(!ret) return next();
-            var result = Object.keys(ret.xml).reduce(function(memo, k){
-              memo[_s.underscored(k)] = ret.xml[k][0];
-              return memo;
-            }, {});
+            var result = ret.xml;
+
+            _format(result);
 
             req.body = result;
             next();
@@ -375,14 +421,14 @@ function xml(options) {
         }
       });
     });
-  }
+  };
 }
 
 function extend(source, target){
-    for(var k in target){
-	source[k] = target[k];
-    }
-    return source;
+  for(var k in target){
+    source[k] = target[k];
+  }
+  return source;
 }
 
 function hasBody(req) {
