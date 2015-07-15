@@ -394,7 +394,7 @@ function xml(options) {
 
         if(!xml) return next();
 
-        req.rawBody = buf;
+        req.rawBuf = buf;
 
         var data = xml.xml;
         _format(data);
