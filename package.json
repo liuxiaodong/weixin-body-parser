@@ -1,6 +1,6 @@
 {
   "name": "weixin-body-parser",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "解析微信的 xml 消息内容",
   "main": "index.js",
   "scripts": {
@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/liuxiaodong/weixin-body-parser",
   "dependencies": {
-    "formidable": "^1.0.16",
-    "qs": "^2.3.3",
-    "raw-body": "^1.3.1",
-    "type-is": "^1.5.5",
+    "formidable": "^1.0.17",
+    "qs": "^6.0.1",
+    "raw-body": "^2.1.5",
+    "type-is": "^1.6.10",
     "wechat-crypto": "0.0.2",
-    "xml2js": "^0.4.4"
+    "xml2js": "^0.4.15"
   }
 }
